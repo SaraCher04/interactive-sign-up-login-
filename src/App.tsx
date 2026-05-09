@@ -10,7 +10,8 @@ import {
   CheckCircle2, ArrowRight, ArrowLeft, Upload, Shield, Clock, 
   Search, LogOut, Settings, MessageSquare, CreditCard, Bell, 
   Plus, File, Trash2, ExternalLink, Info, 
-  MapPin, Check, ChevronDown, Monitor, Home, Users, HelpCircle
+  MapPin, Check, ChevronDown, Monitor, Home, Users, HelpCircle,
+  Zap, AlertTriangle, Star
 } from 'lucide-react';
 import { cn } from './lib/utils';
 
@@ -291,8 +292,8 @@ export default function App() {
           />
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="space-y-2">
+        <div className="space-y-6">
+          <div className="space-y-2 max-w-sm">
             <label className="text-xs font-bold text-slate-700">Date limite</label>
             <input 
               type="date" 
@@ -301,13 +302,100 @@ export default function App() {
               className="auth-input" 
             />
           </div>
-          <div className="space-y-2">
-            <label className="text-xs font-bold text-slate-700">Niveau de service <span className="text-red-500">*</span></label>
-            <select value={formData.serviceLevel || 'Standard'} onChange={e => updateFormData({ serviceLevel: e.target.value as any })} className="auth-input">
-              <option value="Standard">Standard</option>
-              <option value="Express">Express (+30%)</option>
-              <option value="Urgent">Urgent (+60%)</option>
-            </select>
+
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 mb-4">
+              <Star size={18} className="text-amber-500 fill-amber-500/20" />
+              <label className="text-sm font-black text-slate-900">Niveau de service <span className="text-red-500">*</span></label>
+            </div>
+            
+            <div className="grid lg:grid-cols-3 gap-4">
+              {[
+                {
+                  id: 'Standard',
+                  icon: Clock,
+                  title: 'Standard',
+                  duration: '7-20 jours ouvrés',
+                  price: 'Tarif de base',
+                  desc: 'Délai d\'exécution standard, meilleur rapport qualité-prix.',
+                  color: 'emerald'
+                },
+                {
+                  id: 'Express',
+                  icon: Zap,
+                  title: 'Express',
+                  duration: '3-7 jours ouvrés',
+                  price: '+30% du tarif',
+                  desc: 'Délai réduit, priorité élevée pour les urgences modérées.',
+                  color: 'amber'
+                },
+                {
+                  id: 'Urgent',
+                  icon: AlertTriangle,
+                  title: 'Urgent',
+                  duration: '24-72 heures',
+                  price: '+60% du tarif',
+                  desc: 'Attention immédiate, traduction prioritaire absolue.',
+                  color: 'rose'
+                }
+              ].map((level) => {
+                const Icon = level.icon;
+                const isActive = formData.serviceLevel === level.id;
+                
+                const colorClasses = {
+                  emerald: isActive ? 'border-emerald-500 bg-emerald-50/50' : 'hover:border-emerald-200 hover:bg-emerald-50/20 shadow-emerald-500/5',
+                  amber: isActive ? 'border-amber-500 bg-amber-50/50' : 'hover:border-amber-200 hover:bg-amber-50/20 shadow-amber-500/5',
+                  rose: isActive ? 'border-rose-500 bg-rose-50/50' : 'hover:border-rose-200 hover:bg-rose-50/20 shadow-rose-500/5',
+                };
+
+                const iconClasses = {
+                  emerald: 'bg-emerald-100 text-emerald-600',
+                  amber: 'bg-amber-100 text-amber-600',
+                  rose: 'bg-rose-100 text-rose-600',
+                };
+
+                return (
+                  <button
+                    key={level.id}
+                    type="button"
+                    onClick={() => updateFormData({ serviceLevel: level.id as any })}
+                    className={cn(
+                      "relative flex flex-col text-left p-6 rounded-2xl border-2 transition-all duration-300 group shadow-sm",
+                      colorClasses[level.color as keyof typeof colorClasses],
+                      isActive ? "scale-[1.02] shadow-md z-10" : "border-slate-100 bg-white"
+                    )}
+                  >
+                    <div className={cn(
+                      "w-10 h-10 rounded-xl flex items-center justify-center mb-6 transition-transform group-hover:scale-110",
+                      iconClasses[level.color as keyof typeof iconClasses]
+                    )}>
+                      <Icon size={20} />
+                    </div>
+                    
+                    <h4 className="text-base font-black text-slate-900 mb-1">{level.title}</h4>
+                    <p className="text-[11px] font-bold text-slate-500 mb-0.5">{level.duration}</p>
+                    <p className={cn(
+                      "text-[11px] font-black uppercase tracking-wider mb-4 pb-4 border-b border-dashed",
+                      level.color === 'emerald' ? 'text-emerald-700 border-emerald-100' : 
+                      level.color === 'amber' ? 'text-amber-700 border-amber-100' : 'text-rose-700 border-rose-100'
+                    )}>
+                      {level.price}
+                    </p>
+                    
+                    <p className="text-[10px] leading-relaxed text-slate-400 font-medium">{level.desc}</p>
+                    
+                    {isActive && (
+                      <div className={cn(
+                        "absolute top-3 right-3 w-5 h-5 rounded-full flex items-center justify-center text-white",
+                        level.color === 'emerald' ? 'bg-emerald-500' : level.color === 'amber' ? 'bg-amber-500' : 'bg-rose-500'
+                      )}>
+                        <Check size={12} strokeWidth={4} />
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
 
@@ -487,7 +575,7 @@ export default function App() {
                      <p className="text-[9px] font-black uppercase text-white/30 tracking-[0.2em] mb-0.5">Estimation totale</p>
                      <p className="text-xl font-black text-white tracking-widest">6 000 DA</p>
                    </div>
-                   <div className="h-full px-8 py-3 bg-primary text-white font-black text-[10px] uppercase tracking-widest rounded-r-2xl flex items-center">Standard</div>
+                   <div className="h-full px-8 py-3 bg-primary text-white font-black text-[10px] uppercase tracking-widest rounded-r-2xl flex items-center">{formData.serviceLevel}</div>
                 </div>
              </div>
 

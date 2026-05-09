@@ -4,25 +4,39 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Outfit", sans-serif;
-  --color-primary: #38B2AC;
-  --color-primary-dark: #2C7A7B;
+  --color-primary: #5356FF;
+  --color-primary-light: #6B6DFF;
+  --color-primary-dark: #3F41E6;
+  --color-success: #22C55E;
 }
 
 @layer base {
   body {
-    @apply bg-slate-50 text-slate-900 selection:bg-teal-100;
+    @apply bg-[#F8FAFC] text-slate-900 selection:bg-indigo-100;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 }
 
-.auth-input {
-  @apply w-full bg-[#f4f8f7] border-none py-3 px-10 rounded-lg focus:ring-2 focus:ring-teal-500/20 outline-hidden transition-all duration-300 placeholder:text-slate-400 text-slate-700 font-medium text-sm;
+.smart-card {
+  @apply bg-white border border-slate-200/60 shadow-[0_4px_20px_rgba(0,0,0,0.03)] rounded-[1.5rem];
 }
 
-.panel-btn {
-  @apply border-2 border-white text-white rounded-full px-12 py-3 font-bold text-xs uppercase tracking-widest hover:bg-white hover:text-[#38B2AC] transition-all duration-300;
+.auth-input {
+  @apply w-full bg-white border border-slate-200 py-3 px-4 rounded-lg focus:ring-4 focus:ring-primary/5 focus:border-primary outline-hidden transition-all duration-300 placeholder:text-slate-300 text-slate-700 font-medium text-sm;
+}
+
+.sidebar-link {
+  @apply flex items-center gap-4 w-full px-4 py-3 rounded-xl text-slate-500 font-medium hover:bg-slate-50 transition-all duration-200;
+}
+
+.sidebar-link-active {
+  @apply bg-slate-50 text-slate-900;
 }
 
 .submit-btn {
-  @apply bg-[#38B2AC] text-white rounded-full px-12 py-3 font-bold text-xs uppercase tracking-widest hover:bg-[#2C7A7B] transition-all duration-300 shadow-lg shadow-teal-500/20;
+  @apply bg-primary text-white rounded-xl px-10 py-4 font-black text-xs uppercase tracking-widest hover:bg-primary-dark transition-all duration-300 shadow-xl shadow-primary/10 disabled:opacity-50;
+}
+
+.step-bubble {
+  @apply w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500;
 }
